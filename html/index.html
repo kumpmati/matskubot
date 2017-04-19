@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Live tweet-list</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- google font 'Dosis' -->
+        <link href="https://fonts.googleapis.com/css?family=Dosis:200" rel="stylesheet">
+    <style>
+        @keyframes dropin {
+            from {opacity: 0; transform: translateX(-12px) rotateX(45deg);}
+            to {opacity: 1;transform:translateX(0px) rotateX(0deg);}
+        }
+        
+        @keyframes dropin2 {
+            from {opacity: 0; transform:translateY(-12px) translateX(-50%);}
+            to {opacity: 1; transform:translateY(0px) translateX(-50%);}
+        }
+        
+        @keyframes dropin3 {
+            from {opacity: 0; transform:translateY(-12px);}
+            to {opacity: 1; transform:translateY(0px);}
+        }
+        
+        @keyframes rainbow-bg {
+            0% {background-color: #78FFF5;}
+            25% {background-color: #B7E870;}
+            50% {background-color: #FFD085;}
+            75% {background-color: #7A78FF;}
+            100% {background-color: #78FFF5;}
+        }
+        
+        body, html {
+            font-family: arial;
+            animation: rainbow-bg 60s infinite;
+        }
+        
+        #tweet-list-div {
+            position: fixed;
+            width: 90%;
+            max-width: 800px;
+            min-width: 400px;
+            height: 90%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255,255,255,0.7);
+            border-bottom-left-radius: .2em;
+            border-bottom-right-radius: .2em;
+            box-shadow: 0px 2px 3px rgba(0,0,0,0.2);
+            white-space:normal;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            padding: 0.5em;
+            padding-top: 0;
+            
+            animation: dropin2 .5s;
+        }
+        #tweet-list-div:hover {
+            overflow-y: scroll;
+        }
+        
+        #tweet-list {
+            float: left;
+            margin: 0;
+            padding: 0;
+            margin-top: .5em;
+        }
+        #tweet-list li {
+            list-style-type: none;
+            margin-bottom: 0.3em;
+            background-color: white;
+            padding: .2em;
+            border-radius: .3em;
+            border: 1px solid rgb(245,245,245);
+            box-shadow: 0px 1px 2px rgba(0,0,0,0.1);
+            max-width: 100%;
+            min-height: 2em;
+            line-height: 150%;
+            
+            animation: dropin .4s;
+        }
+        #tweet-list li img {
+            
+            float: left;
+            border-radius: 50%;
+            position: relative;
+            left: 0;
+            
+            margin: 0em;
+            padding: 0;
+            height: 2em;
+            width: auto;
+        }
+        
+        #tweet-list-header-div {
+            margin: 0;
+            padding-left: 0.5em;
+            padding-right: 0.5em;
+            position: static;
+            font-family: Dosis, Arial;
+            
+            background-color: rgb(255,255,255);
+            border-top-left-radius: .2em;
+            border-top-right-radius: .2em;
+            z-index: 5;
+            width: 90%;
+            max-width: 800px;
+            min-width: 400px;
+            height: 3em;
+            
+            line-height: 3em;
+            z-index: 5;
+            
+            animation: dropin3 .8s;
+        }
+        
+        #tweet-list-header {
+            color: black;
+        }
+        
+        #controls-div {
+            color: white;
+            font-family: arial;
+            background-color: transparent;
+            width: 20px;
+            height: 1em;
+            padding: .1em;
+            border-radius: .2em;
+            line-height: 1em;
+            
+            overflow: hidden;
+            
+            transition: width, background-color, .3s;
+        }
+        #controls-div:hover {
+            width: 80px;
+            background-color: rgba(0,0,0,0.3);
+        }
+        </style>
+    </head>
+    
+    <body>
+        <div id="controls-div">
+            
+            <input type="checkbox" id="audioButton"/>
+            <label for='audioButton'>Audio</label>
+        </div>
+        
+    <center><div id="tweet-list-header-div"><h2 id="tweet-list-header">#food</h2></div></center>
+        <div id="tweet-list-div">
+            <ul id="tweet-list">
+                
+            </ul>
+        </div>
+        
+        <!-- socket.io -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+        <!-- jquery -->
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        
+        <!-- custom scripts -->
+        <script type="text/javascript">
+            var timeoutValue = 20;
+            var filter = "yes";
+            
+            var list = $('#tweet-list');
+            var audio = new Audio('newTweet.mp3');
+            //var list = document.getElementById('tweet-list');
+            var socket = io.connect('localhost:3001');
+            socket.on('new tweet', function(data) {
+                
+                //element for tweet list item
+                var entry = document.createElement('li');
+                //element for profile picture of tweeter
+                var img = document.createElement('img');
+                //href link to profile of tweeter
+                var link = document.createElement('a');
+                //set link to tweeter's profile
+                link.href = "http://twitter.com/" + data.profile;
+                //set link to open in new window
+                link.target = "_blank";
+                //set image id to tweet-img for css purposes
+                img.id = "tweet-img";
+                //set image source to tweeter's profile picture
+                img.src = data.img;
+                
+                //add image to href link (makes image clickable)
+                link.appendChild(img);
+                //add href link to list item
+                entry.appendChild(link);
+                //create text node for tweet text and add it to list item
+                entry.appendChild(document.createTextNode(data.msg));
+                
+                if(data.type === "special") {
+                    entry.style.backgroundColor = "white";
+                    entry.style.boxShadow = "0px 0px 10px rgb(255, 144, 0)";
+                    entry.style.color = "black";
+                    entry.style.textShadow = "0px 1px 1px rgba(255, 144, 0, 0.4)";
+                }
+                //add list item to tweet-list (ul)
+                list.append(entry);
+                if(document.getElementById("audioButton").checked) {audio.play();}
+                setTimeout(function() {
+                    $(entry).fadeOut(300, function() {
+                        entry.remove();
+                    });
+                }, timeoutValue*1000);
+                
+                //scroll to bottom of tweet list to stay with the feed
+                $('#tweet-list-div').scrollTop( $('#tweet-list-div').scrollTop() + $('#tweet-list li').height()*2 );
+                
+            });
+        </script>
+    </body>
+</html>
+            
+           
