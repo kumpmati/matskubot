@@ -171,7 +171,7 @@ and open the template in the editor.
             var list = $('#tweet-list');
             var audio = new Audio('newTweet.mp3');
             //var list = document.getElementById('tweet-list');
-            var socket = io.connect('https://twitter-food.herokuapp.com/');
+            var socket = io.connect("https://twitter-food.herokuapp.com");
             socket.on('new tweet', function(data) {
                 
                 //element for tweet list item
