@@ -9,7 +9,7 @@ var T = new Twit(config);
 //commands
 var cmd = require('./cmd');
 
-var statusfilter = "#bored";
+var statusfilter = "#food";
 
 //declare stream of matskubot mention
 var mentionStream = T.stream('statuses/filter', {track: '@matskubot'});
