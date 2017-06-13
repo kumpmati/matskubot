@@ -76,7 +76,7 @@ mentionStream.on('tweet', function (tweet) {
 
 var app = require('express')();
 var server = require('http').Server(app);
-var io = require('socket.io').listen(3001);
+var io = require('socket.io')(server);
 
 io.sockets.on('connection', function(socket) {
 });
