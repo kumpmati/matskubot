@@ -11,6 +11,8 @@ var cmd = require('./cmd');
 
 var statusfilter = "#food";
 
+var port = process.env.PORT || 5000;
+
 //declare stream of matskubot mention
 var mentionStream = T.stream('statuses/filter', {track: '@matskubot'});
 //every tweet with #moi in it
@@ -80,4 +82,6 @@ io.sockets.on('connection', function(socket) {
 });
 
 app.use(require('express').static('html'));
-server.listen(process.env.PORT || 5000);
+server.listen(port, function() {
+        console.log('started on port ' + port);
+});
