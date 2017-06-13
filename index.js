@@ -9,7 +9,7 @@ var T = new Twit(config);
 //commands
 var cmd = require('./cmd');
 
-var statusfilter = "#food";
+var statusfilter = "#bored";
 
 //declare stream of matskubot mention
 var mentionStream = T.stream('statuses/filter', {track: '@matskubot'});
@@ -29,7 +29,7 @@ var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
-server.listen(80);
+server.listen(process.env.PORT || 5000);
 
 //clear console screen
 process.stdout.write('\033c');
@@ -82,5 +82,3 @@ io.sockets.on('connection', function(socket) {
 });
 
 app.use(require('express').static('html'));
-
-app.listen(3000);
