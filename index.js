@@ -29,8 +29,6 @@ var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
-server.listen(process.env.PORT || 5000);
-
 //clear console screen
 process.stdout.write('\033c');
 
@@ -82,3 +80,4 @@ io.sockets.on('connection', function(socket) {
 });
 
 app.use(require('express').static('html'));
+server.listen(process.env.PORT || 5000);
