@@ -9,7 +9,7 @@ var T = new Twit(config);
 //commands
 var cmd = require('./cmd');
 
-var statusfilter = "#food";
+var statusfilter = "dank meme";
 
 var port = process.env.PORT || 5000;
 
